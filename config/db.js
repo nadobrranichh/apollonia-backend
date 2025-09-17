@@ -9,6 +9,9 @@ export const client = new Client({
   port: process.env.POSTGRESQL_PORT,
   password: process.env.POSTGRESQL_PASSWORD,
   database: process.env.POSTGRESQL_DATABASE,
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
 
 client.connect();
