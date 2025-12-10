@@ -1,4 +1,4 @@
-import { pool } from "../config/db";
+import { pool } from "../config/db.js";
 
 export const saveBillingData = async function (sessionId, formData) {
   const billingDataQuery = `INSERT INTO billing_addresses (
