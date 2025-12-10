@@ -1,5 +1,5 @@
 import { calculateHST, calculateSubtotal } from "../utils/cartMethods.js";
-import { client } from "../config/db.js";
+import { pool } from "../config/db.js";
 import { saveShippingData } from "../models/shippingModel.js";
 import { saveBillingData } from "../models/billingModel.js";
 import { saveCartData } from "../models/cartModel.js";
@@ -30,7 +30,7 @@ export const saveCheckoutSession = async function (
   ];
   let sessionData;
   try {
-    const result = await client.query(sessionQuery, sessionValues);
+    const result = await pool.query(sessionQuery, sessionValues);
     sessionData = result.rows[0];
 
     await saveShippingData(sessionData.id, formData);

@@ -1,4 +1,4 @@
-import { client } from "../config/db.js";
+import { pool } from "../config/db.js";
 
 export const saveCartData = async function (sessionId, cart) {
   const cartItemQuery = `INSERT INTO cart_items (
@@ -11,10 +11,10 @@ export const saveCartData = async function (sessionId, cart) {
 
   try {
     for (const item of cart) {
-      const priceResult = await client.query(priceQuery, [item.id]);
+      const priceResult = await pool.query(priceQuery, [item.id]);
       const unitPrice = priceResult.rows[0]?.price_in_cents;
       const itemValues = [item.id, sessionId, item.quantity, unitPrice];
-      const result = await client.query(cartItemQuery, itemValues);
+      const result = await pool.query(cartItemQuery, itemValues);
     }
   } catch (error) {
     console.error("failed to insert a cart item:", error);

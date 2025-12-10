@@ -3,7 +3,6 @@ import nodemailer from "nodemailer";
 import express from "express";
 import cors from "cors";
 import { stripeObject } from "./config/stripe.js";
-import { client } from "./config/db.js";
 import { flagSessionAsFailed } from "./models/sessionModel.js";
 import { getProducts } from "./models/productsModel.js";
 import { getAllQuery } from "./models/genericModel.js";
@@ -12,6 +11,7 @@ import { generateReceiptMarkup } from "./utils/htmlTemplates.js";
 import { checkCart } from "./utils/cartMethods.js";
 import { saveCheckoutSession } from "./services/checkoutService.js";
 import { sendTelegramMessage } from "./services/telegramService.js";
+import { pool } from "./config/db.js";
 dotenv.config();
 
 const app = express();
@@ -96,7 +96,7 @@ app.post(
       if (event.type === "checkout.session.completed") {
         const session = event.data.object;
         const sessionCompletedQuery = `UPDATE sessions SET status='fulfilled' WHERE stripe_session_id=$1 RETURNING *`;
-        const result = await client.query(sessionCompletedQuery, [session.id]);
+        const result = await pool.query(sessionCompletedQuery, [session.id]);
         const data = result.rows[0];
         const formData = JSON.parse(session.metadata.formData);
         const cart = JSON.parse(session.metadata.cart);
@@ -137,7 +137,7 @@ app.post(
 app.post("/session-status", express.json(), async (req, res) => {
   const { sessionId } = req.body;
   try {
-    const result = await client.query(
+    const result = await pool.query(
       "SELECT status FROM sessions WHERE stripe_session_id=$1",
       [sessionId]
     );

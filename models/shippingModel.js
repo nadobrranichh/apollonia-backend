@@ -1,4 +1,4 @@
-import { client } from "../config/db.js";
+import { pool } from "../config/db.js";
 
 export async function saveShippingData(sessionId, formData) {
   const query = `
@@ -38,7 +38,7 @@ export async function saveShippingData(sessionId, formData) {
   ];
 
   try {
-    const result = await client.query(query, values);
+    const result = await pool.query(query, values);
     return result.rows[0];
   } catch (error) {
     console.error("Error inserting shipping info:", error);

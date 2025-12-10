@@ -1,4 +1,4 @@
-import { client } from "../config/db.js";
+import { pool } from "../config/db";
 
 export const saveBillingData = async function (sessionId, formData) {
   const billingDataQuery = `INSERT INTO billing_addresses (
@@ -42,7 +42,7 @@ export const saveBillingData = async function (sessionId, formData) {
     sessionId,
   ];
   try {
-    await client.query(billingDataQuery, billingValues);
+    await pool.query(billingDataQuery, billingValues);
   } catch (error) {
     console.error("error inserting billing info:", error);
     throw error;

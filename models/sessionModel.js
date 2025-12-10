@@ -1,8 +1,8 @@
-import { client } from "../config/db.js";
+import { pool } from "../config/db.js";
 
 export const flagSessionAsFailed = async function (sessionId) {
   try {
-    await client.query(
+    await pool.query(
       `UPDATE sessions SET status = 'failed' WHERE stripe_session_id = $1`,
       [sessionId]
     );
