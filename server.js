@@ -64,8 +64,10 @@ app.post("/create-checkout-session", express.json(), async (req, res) => {
     ];
 
     const stripeSession = await stripeObject.checkout.sessions.create({
-      payment_method_types: ["card"],
       mode: "payment",
+      automatic_payment_methods: {
+        enabled: true,
+      },
       line_items: lineItemsArray,
       success_url: `${process.env.FRONTEND_URL}/payment-result?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.FRONTEND_URL}/payment-result?session_id={CHECKOUT_SESSION_ID}`,
